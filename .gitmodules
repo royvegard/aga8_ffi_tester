@@ -1,0 +1,3 @@
+[submodule "aga8"]
+	path = aga8
+	url = https://github.com/royvegard/aga8.git
