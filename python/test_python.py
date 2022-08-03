@@ -53,7 +53,7 @@ lib = ctypes.cdll.LoadLibrary(path + prefix + "aga8" + extension)
 
 lib.gerg_new.restype = POINTER(Gerg2008S)
 lib.gerg_free.argtypes = (POINTER(Gerg2008S),)
-lib.gerg_set_composition.argtypes = (POINTER(Gerg2008S), Composition, c_uint32)
+lib.gerg_set_composition.argtypes = (POINTER(Gerg2008S), POINTER(Composition), POINTER(c_uint32))
 lib.gerg_set_pressure.argtypes = (POINTER(Gerg2008S), c_double)
 lib.gerg_set_temperature.argtypes = (POINTER(Gerg2008S), c_double)
 lib.gerg_calculate_density.argtypes = (POINTER(Gerg2008S),)
@@ -71,8 +71,7 @@ class Gerg2008:
     def __exit__(self, exc_type, exc_value, traceback):
         lib.gerg_free(self.obj)
 
-    def set_composition(self, comp):
-        err = 0
+    def set_composition(self, comp, err):
         lib.gerg_set_composition(self.obj, comp, err)
 
     def set_pressure(self, pressure):
@@ -80,6 +79,15 @@ class Gerg2008:
 
     def set_temperature(self, temperature):
         lib.gerg_set_temperature(self.obj, temperature)
+
+    def calculate_density(self):
+        lib.gerg_calculate_density(self.obj)
+
+    def calculate_properties(self):
+        lib.gerg_calculate_properties(self.obj)
+
+    def get_properties(self):
+        return lib.gerg_get_properties(self.obj)
 
 with Gerg2008() as gerg_test:
     comp = Composition(methane = 0.77824,
@@ -104,8 +112,30 @@ with Gerg2008() as gerg_test:
                        helium = 0.007,
                        argon = 0.001)
 
-    print(comp.argon)
-
-    gerg_test.set_composition(comp)
+    err = c_uint32(0)
+    gerg_test.set_composition(comp, err)
+    assert err.value == 0
     gerg_test.set_pressure(50000.0)
     gerg_test.set_temperature(400.0)
+    gerg_test.calculate_density()
+    gerg_test.calculate_properties()
+    r = gerg_test.get_properties()
+
+    assert abs(r.d - 12.79828626082062) < 1.0e-10
+    assert abs(r.mm - 20.5427445016) < 1.0e-10
+    assert abs(r.z - 1.174690666383717) < 1.0e-10
+    assert abs(r.dp_dd - 7000.694030193327) < 1.0e-10
+    assert abs(r.d2p_dd2 - 1129.526655214841) < 1.0e-10
+    assert abs(r.dp_dt - 235.9832292593096) < 1.0e-10
+    assert abs(r.u - -2746.49290121253) < 1.0e-10
+    assert abs(r.h - 1160.280160510973) < 1.0e-10
+    assert abs(r.s - -38.57590392409089) < 1.0e-10
+    assert abs(r.cv - 39.02948218156372) < 1.0e-10
+    assert abs(r.cp - 58.45522051000366) < 1.0e-10
+    assert abs(r.w - 714.4248840596024) < 1.0e-10
+    assert abs(r.g - 16590.64173014733) < 1.0e-10
+    assert abs(r.jt - 7.155629581480913E-5) < 1.0e-10
+    assert abs(r.kappa - 2.683820255058032) < 1.0e-10
+
+    print("\033[0;32mSuccess!\033[0m")
+

@@ -1,16 +1,16 @@
-build_rust:
-	cd rust && cargo build
-
-run_rust:
-	cd rust && cargo run
+test: test_rust test_c test_python
 
 test_rust:
-	cd rust && cargo test
+	@echo "Testing Rust"
+	@cd rust && cargo test
 
 test_c: c/aga8_c_test
-	LD_LIBRARY_PATH=aga8/target/debug c/aga8_c_test
+	@echo "Testing C"
+	@LD_LIBRARY_PATH=aga8/target/debug c/aga8_c_test
 
-test: test_c test_rust
+test_python: aga8_shared_lib
+	@echo "Testing Python"
+	@python/test_python.py
 
 c/aga8_c_test: c/main.c c/aga8.h
 	gcc c/main.c -o c/aga8_c_test -Laga8/target/debug -laga8
