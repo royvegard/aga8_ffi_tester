@@ -12,7 +12,7 @@ namespace Aga8Tester
         internal static extern void Aga8Free(IntPtr aga8);
 
         [DllImport("aga8", EntryPoint = "aga8_set_composition")]
-        internal static extern void Aga8SetComposition(DetailHandle aga8, ref Composition composition);
+        internal static extern void Aga8SetComposition(DetailHandle aga8, ref Composition composition, ref CompositionError err);
 
         [DllImport("aga8", EntryPoint = "aga8_set_pressure")]
         internal static extern void Aga8SetPressure(DetailHandle aga8, double pressure);

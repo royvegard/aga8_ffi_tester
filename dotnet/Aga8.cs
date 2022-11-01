@@ -21,7 +21,7 @@ namespace Aga8Tester
         public double jt;
         public double kappa;
     }
- 
+
     [StructLayout(LayoutKind.Sequential)]
     public struct Composition
     {
@@ -85,9 +85,9 @@ namespace Aga8Tester
             Dispose(false);
         }
 
-        public void SetComposition(ref Composition composition)
+        public void SetComposition(ref Composition composition, ref CompositionError err)
         {
-            NativeMethods.Aga8SetComposition(detail, ref composition);
+            NativeMethods.Aga8SetComposition(detail, ref composition, ref err);
         }
 
         public void SetPressure(double pressure)
@@ -150,7 +150,7 @@ namespace Aga8Tester
         {
             if (disposed)
                 return;
-            
+
             if (disposing)
             {
                 // free managed objects
@@ -257,7 +257,7 @@ namespace Aga8Tester
         {
             if (disposed)
                 return;
-            
+
             if (disposing)
             {
                 // free managed objects

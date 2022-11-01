@@ -26,7 +26,8 @@ COMP_FULL.argon = 0.001;
 
 using (var aga = new Aga8Tester.Detail())
 {
-    aga.SetComposition(ref COMP_FULL);
+    var comp_err = Aga8Tester.CompositionError.Ok;
+    aga.SetComposition(ref COMP_FULL, ref comp_err);
     aga.SetPressure(50_000.0);
     aga.SetTemperature(400.0);
     aga.CalculateDensity();
