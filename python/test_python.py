@@ -59,7 +59,7 @@ lib.gerg_free.argtypes = (POINTER(Gerg2008S),)
 lib.gerg_set_composition.argtypes = (POINTER(Gerg2008S), POINTER(Composition), POINTER(c_uint32))
 lib.gerg_set_pressure.argtypes = (POINTER(Gerg2008S), c_double)
 lib.gerg_set_temperature.argtypes = (POINTER(Gerg2008S), c_double)
-lib.gerg_calculate_density.argtypes = (POINTER(Gerg2008S),)
+lib.gerg_calculate_density.argtypes = (POINTER(Gerg2008S), c_uint32, POINTER(c_uint32))
 lib.gerg_calculate_properties.argtypes = (POINTER(Gerg2008S),)
 lib.gerg_get_properties.argtypes = (POINTER(Gerg2008S),)
 lib.gerg_get_properties.restype = Properties
@@ -69,7 +69,7 @@ lib.aga8_free.argtypes = (POINTER(DetailS),)
 lib.aga8_set_composition.argtypes = (POINTER(DetailS), POINTER(Composition), POINTER(c_uint32))
 lib.aga8_set_pressure.argtypes = (POINTER(DetailS), c_double)
 lib.aga8_set_temperature.argtypes = (POINTER(DetailS), c_double)
-lib.aga8_calculate_density.argtypes = (POINTER(DetailS),)
+lib.aga8_calculate_density.argtypes = (POINTER(DetailS), POINTER(c_uint32))
 lib.aga8_calculate_properties.argtypes = (POINTER(DetailS),)
 lib.aga8_get_properties.argtypes = (POINTER(DetailS),)
 lib.aga8_get_properties.restype = Properties
@@ -93,8 +93,8 @@ class Gerg2008:
     def set_temperature(self, temperature):
         lib.gerg_set_temperature(self.obj, temperature)
 
-    def calculate_density(self):
-        lib.gerg_calculate_density(self.obj)
+    def calculate_density(self, iflag, err):
+        lib.gerg_calculate_density(self.obj, iflag, err)
 
     def calculate_properties(self):
         lib.gerg_calculate_properties(self.obj)
@@ -121,8 +121,8 @@ class Detail:
     def set_temperature(self, temperature):
         lib.aga8_set_temperature(self.obj, temperature)
 
-    def calculate_density(self):
-        lib.aga8_calculate_density(self.obj)
+    def calculate_density(self, err):
+        lib.aga8_calculate_density(self.obj, err)
 
     def calculate_properties(self):
         lib.aga8_calculate_properties(self.obj)
@@ -158,7 +158,8 @@ with Gerg2008() as gerg_test:
     assert err.value == 0
     gerg_test.set_pressure(50000.0)
     gerg_test.set_temperature(400.0)
-    gerg_test.calculate_density()
+    gerg_test.calculate_density(0, err)
+    assert err.value == 0
     gerg_test.calculate_properties()
     r = gerg_test.get_properties()
 
@@ -206,7 +207,8 @@ with Detail() as aga8_test:
     assert err.value == 0
     aga8_test.set_pressure(50000.0)
     aga8_test.set_temperature(400.0)
-    aga8_test.calculate_density()
+    aga8_test.calculate_density(err)
+    assert err.value == 0
     aga8_test.calculate_properties()
     r = aga8_test.get_properties()
 

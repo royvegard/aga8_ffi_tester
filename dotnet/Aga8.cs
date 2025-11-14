@@ -54,6 +54,13 @@ namespace Aga8Tester
         Empty = 1,
         BadSum = 2
     }
+
+    public enum DensityError : int
+    {
+        Ok = 0,
+        IterationFail = 1,
+    PressureTooLow = 2
+    }
     internal class DetailHandle : SafeHandle
     {
         public DetailHandle() : base(IntPtr.Zero, true) { }
@@ -125,9 +132,9 @@ namespace Aga8Tester
             NativeMethods.Aga8CalculatePressure(detail);
         }
 
-        public void CalculateDensity()
+        public void CalculateDensity(ref DensityError err)
         {
-            NativeMethods.Aga8CalculateDensity(detail);
+            NativeMethods.Aga8CalculateDensity(detail, ref err);
         }
 
         public void CalculateProperties()
@@ -232,9 +239,9 @@ namespace Aga8Tester
             NativeMethods.GergCalculatePressure(gerg);
         }
 
-        public void CalculateDensity()
+        public void CalculateDensity(Int32 iflag, ref DensityError err)
         {
-            NativeMethods.GergCalculateDensity(gerg);
+            NativeMethods.GergCalculateDensity(gerg, iflag, ref err);
         }
 
         public void CalculateProperties()

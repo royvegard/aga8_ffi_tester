@@ -29,14 +29,16 @@ int main() {
     comp.helium = 0.007;
     comp.argon = 0.001;
 
-    CompositionError comp_err = Ok;
+    CompositionError comp_err = CompositionError_Ok;
+    DensityError dens_err = DensityError_Ok;
 
     gerg_set_composition(gerg_test, &comp, &comp_err);
-    assert(comp_err == Ok);
+    assert(comp_err == CompositionError_Ok);
     gerg_set_pressure(gerg_test, 50000.0);
     gerg_set_temperature(gerg_test, 400.0);
 
-    gerg_calculate_density(gerg_test);
+    gerg_calculate_density(gerg_test, 0, &dens_err);
+    assert(dens_err == DensityError_Ok);
     gerg_calculate_properties(gerg_test);
     Properties results = gerg_get_properties(gerg_test);
 
@@ -59,9 +61,7 @@ int main() {
     assert(fabs(results.kappa - 2.683820255058032) < 1.0e-10);
 
     // Green text for passed tests
-    printf("\033[0;32m");
-    printf("Success!\n");
-    printf("\033[0m");
+    printf("\033[0;32mSuccess!\033[0m\n");
 
     return EXIT_SUCCESS;
 }

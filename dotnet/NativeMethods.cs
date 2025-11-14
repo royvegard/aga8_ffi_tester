@@ -39,7 +39,7 @@ namespace Aga8Tester
         internal static extern void Aga8CalculatePressure(DetailHandle aga8);
 
         [DllImport("aga8", EntryPoint = "aga8_calculate_density")]
-        internal static extern void Aga8CalculateDensity(DetailHandle aga8);
+        internal static extern void Aga8CalculateDensity(DetailHandle aga8, ref DensityError err);
 
         [DllImport("aga8", EntryPoint = "aga8_calculate_properties")]
         internal static extern void Aga8CalculateProperties(DetailHandle aga8);
@@ -79,7 +79,7 @@ namespace Aga8Tester
         internal static extern void GergCalculatePressure(GergHandle gerg);
 
         [DllImport("aga8", EntryPoint = "gerg_calculate_density")]
-        internal static extern void GergCalculateDensity(GergHandle gerg);
+        internal static extern void GergCalculateDensity(GergHandle gerg, Int32 iflag, ref DensityError err);
 
         [DllImport("aga8", EntryPoint = "gerg_calculate_properties")]
         internal static extern void GergCalculateProperties(GergHandle gerg);

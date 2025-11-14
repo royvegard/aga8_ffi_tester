@@ -44,7 +44,7 @@ mod tests {
         gerg_test.d = 6.36570;
         gerg_test.z = 0.0;
 
-        gerg_test.density(0);
+        gerg_test.density(0).unwrap();
         gerg_test.properties();
 
         assert!(f64::abs(gerg_test.d - 12.798_286_260_820_62) < 1.0e-10);
